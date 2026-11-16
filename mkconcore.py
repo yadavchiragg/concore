@@ -132,7 +132,7 @@ SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 def _load_tool_config(filepath):
     tools = {}
-    with open(filepath, "r") as f:
+    with open(filepath, "r", encoding="utf-8") as f:
         for line in f:
             line = line.strip()
             if not line or line.startswith("#") or "=" not in line:
@@ -222,15 +222,15 @@ if os.path.exists(CONCOREPATH+"/concore.octave"):
     M_IS_OCTAVE = True       #treat .m as octave 9/27/21
 
 if os.path.exists(CONCOREPATH+"/concore.mcr"): # 11/12/21
-    with open(CONCOREPATH+"/concore.mcr", "r") as f:
+    with open(CONCOREPATH+"/concore.mcr", "r", encoding="utf-8") as f:
         MCRPATH = f.readline().strip() #path to local Ubunta Matlab Compiler Runtime
     
 if os.path.exists(CONCOREPATH+"/concore.sudo"): # 12/04/21
-    with open(CONCOREPATH+"/concore.sudo", "r") as f:
+    with open(CONCOREPATH+"/concore.sudo", "r", encoding="utf-8") as f:
         DOCKEREXE = f.readline().strip() #to omit sudo in docker
 
 if os.path.exists(CONCOREPATH+"/concore.repo"): # 12/04/21
-    with open(CONCOREPATH+"/concore.repo", "r") as f:
+    with open(CONCOREPATH+"/concore.repo", "r", encoding="utf-8") as f:
         DOCKEREPO = f.readline().strip() #docker id for repo
 
 if os.path.exists(CONCOREPATH+"/concore.tools"):
@@ -285,24 +285,24 @@ if os.path.exists(outdir):
 os.makedirs(outdir)
 os.chdir(outdir)
 if concoretype == "windows":
-    fbuild = open("build.bat","w")
-    frun = open("run.bat", "w")
-    fdebug = open("debug.bat", "w")
-    fstop = open("stop.bat", "w")  #3/27/21
-    fclear = open("clear.bat", "w") 
-    fmaxtime = open("maxtime.bat", "w") # 9/12/21
-    funlock = open("unlock.bat", "w") # 12/4/21
-    fparams = open("params.bat", "w") # 9/18/22
+    fbuild = open("build.bat","w", encoding="utf-8")
+    frun = open("run.bat", "w", encoding="utf-8")
+    fdebug = open("debug.bat", "w", encoding="utf-8")
+    fstop = open("stop.bat", "w", encoding="utf-8")  #3/27/21
+    fclear = open("clear.bat", "w", encoding="utf-8") 
+    fmaxtime = open("maxtime.bat", "w", encoding="utf-8") # 9/12/21
+    funlock = open("unlock.bat", "w", encoding="utf-8") # 12/4/21
+    fparams = open("params.bat", "w", encoding="utf-8") # 9/18/22
 
 else:
-    fbuild = open("build","w")
-    frun = open("run", "w")
-    fdebug = open("debug", "w")
-    fstop = open("stop", "w")  #3/27/21
-    fclear = open("clear", "w") 
-    fmaxtime = open("maxtime", "w") # 9/12/21
-    funlock = open("unlock", "w") # 12/4/21
-    fparams = open("params", "w") # 9/18/22
+    fbuild = open("build","w", encoding="utf-8")
+    frun = open("run", "w", encoding="utf-8")
+    fdebug = open("debug", "w", encoding="utf-8")
+    fstop = open("stop", "w", encoding="utf-8")  #3/27/21
+    fclear = open("clear", "w", encoding="utf-8") 
+    fmaxtime = open("maxtime", "w", encoding="utf-8") # 9/12/21
+    funlock = open("unlock", "w", encoding="utf-8") # 12/4/21
+    fparams = open("params", "w", encoding="utf-8") # 9/18/22
 
 def cleanup_script_files():
     for fh in [fbuild, frun, fdebug, fstop, fclear, fmaxtime, funlock, fparams]:
@@ -323,7 +323,7 @@ logging.info(f"treat .m as octave: {str(M_IS_OCTAVE)}")
 logging.info(f"MCR path: {MCRPATH}")
 logging.info(f"Docker repository: {DOCKEREPO}")
 
-with open(GRAPHML_FILE, "r") as f:
+with open(GRAPHML_FILE, "r", encoding="utf-8") as f:
     text_str = f.read()
 
 soup = BeautifulSoup(text_str, 'xml')
@@ -627,18 +627,18 @@ logging.info(f"Languages detected in graph: {required_langs}")
 if 'py' in required_langs:
     try:
         if concoretype=="docker":
-            fsource = open(CONCOREPATH+"/concoredocker.py")
+            fsource = open(CONCOREPATH+"/concoredocker.py", encoding="utf-8")
         else:
-            fsource = open(CONCOREPATH+"/concore.py")
+            fsource = open(CONCOREPATH+"/concore.py", encoding="utf-8")
     except (FileNotFoundError, IOError):
         print(CONCOREPATH+" is not correct path to concore (missing python files)")
         sys.exit(1)
-    with open(outdir+"/src/concore.py","w") as fcopy:
+    with open(outdir+"/src/concore.py","w", encoding="utf-8") as fcopy:
         fcopy.write(fsource.read())
     fsource.close()
     try:
-        with open(CONCOREPATH+"/concore_base.py") as fbase:
-            with open(outdir+"/src/concore_base.py","w") as fcopy:
+        with open(CONCOREPATH+"/concore_base.py", encoding="utf-8") as fbase:
+            with open(outdir+"/src/concore_base.py","w", encoding="utf-8") as fcopy:
                 fcopy.write(fbase.read())
     except (FileNotFoundError, IOError):
         print(CONCOREPATH+" is not correct path to concore (missing concore_base.py)")
@@ -646,29 +646,29 @@ if 'py' in required_langs:
 
 if 'jl' in required_langs and concoretype=="docker":
     try:
-        fsource = open(CONCOREPATH+"/concoredocker.jl")
+        fsource = open(CONCOREPATH+"/concoredocker.jl", encoding="utf-8")
     except (FileNotFoundError, IOError):
         print(CONCOREPATH+" is not correct path to concore (missing concoredocker.jl)")
         sys.exit(1)
-    with open(outdir+"/src/concore.jl","w") as fcopy:
+    with open(outdir+"/src/concore.jl","w", encoding="utf-8") as fcopy:
         fcopy.write(fsource.read())
     fsource.close()
 
 if 'cpp' in required_langs:
     try:
         if concoretype=="docker":
-            fsource = open(CONCOREPATH+"/concoredocker.hpp")
+            fsource = open(CONCOREPATH+"/concoredocker.hpp", encoding="utf-8")
         else:
-            fsource = open(CONCOREPATH+"/concore.hpp")
+            fsource = open(CONCOREPATH+"/concore.hpp", encoding="utf-8")
     except (FileNotFoundError, IOError):
         print(CONCOREPATH+" is not correct path to concore (missing C++ files)")
         sys.exit(1)
-    with open(outdir+"/src/concore.hpp","w") as fcopy:
+    with open(outdir+"/src/concore.hpp","w", encoding="utf-8") as fcopy:
         fcopy.write(fsource.read())
     fsource.close()
     try:
-        with open(CONCOREPATH+"/concore_base.hpp") as fbase:
-            with open(outdir+"/src/concore_base.hpp","w") as fcopy:
+        with open(CONCOREPATH+"/concore_base.hpp", encoding="utf-8") as fbase:
+            with open(outdir+"/src/concore_base.hpp","w", encoding="utf-8") as fcopy:
                 fcopy.write(fbase.read())
     except (FileNotFoundError, IOError):
         print(CONCOREPATH+" is not correct path to concore (missing concore_base.hpp)")
@@ -677,70 +677,70 @@ if 'cpp' in required_langs:
 if 'v' in required_langs:
     try:
         if concoretype=="docker":
-            fsource = open(CONCOREPATH+"/concoredocker.v")
+            fsource = open(CONCOREPATH+"/concoredocker.v", encoding="utf-8")
         else:
-            fsource = open(CONCOREPATH+"/concore.v")
+            fsource = open(CONCOREPATH+"/concore.v", encoding="utf-8")
     except (FileNotFoundError, IOError):
         print(CONCOREPATH+" is not correct path to concore (missing Verilog files)")
         sys.exit(1)
-    with open(outdir+"/src/concore.v","w") as fcopy:
+    with open(outdir+"/src/concore.v","w", encoding="utf-8") as fcopy:
         fcopy.write(fsource.read())
     fsource.close()
 
 if 'java' in required_langs:
     java_runtime = "concoredocker.java" if concoretype == "docker" else "concore.java"
     try:
-        fsource = open(CONCOREPATH+"/"+java_runtime)
-        fcore = open(CONCOREPATH+"/ConcoreJavaRuntimeCore.java")
+        fsource = open(CONCOREPATH+"/"+java_runtime, encoding="utf-8")
+        fcore = open(CONCOREPATH+"/ConcoreJavaRuntimeCore.java", encoding="utf-8")
     except (FileNotFoundError, IOError):
         print(CONCOREPATH+" is not correct path to concore (missing Java files)")
         sys.exit(1)
-    with open(outdir+"/src/"+java_runtime,"w") as fcopy:
+    with open(outdir+"/src/"+java_runtime,"w", encoding="utf-8") as fcopy:
         fcopy.write(fsource.read())
     fsource.close()
-    with open(outdir+"/src/ConcoreJavaRuntimeCore.java","w") as fcopy:
+    with open(outdir+"/src/ConcoreJavaRuntimeCore.java","w", encoding="utf-8") as fcopy:
         fcopy.write(fcore.read())
     fcore.close()
 
 if 'm' in required_langs:
     try:
-        fsource = open(CONCOREPATH+"/concore_default_maxtime.m")
-        with open(outdir+"/src/concore_default_maxtime.m","w") as fcopy: fcopy.write(fsource.read())
+        fsource = open(CONCOREPATH+"/concore_default_maxtime.m", encoding="utf-8")
+        with open(outdir+"/src/concore_default_maxtime.m","w", encoding="utf-8") as fcopy: fcopy.write(fsource.read())
         fsource.close()
 
-        fsource = open(CONCOREPATH+"/concore_unchanged.m")
-        with open(outdir+"/src/concore_unchanged.m","w") as fcopy: fcopy.write(fsource.read())
+        fsource = open(CONCOREPATH+"/concore_unchanged.m", encoding="utf-8")
+        with open(outdir+"/src/concore_unchanged.m","w", encoding="utf-8") as fcopy: fcopy.write(fsource.read())
         fsource.close()
 
-        fsource = open(CONCOREPATH+"/concore_read.m")
-        with open(outdir+"/src/concore_read.m","w") as fcopy: fcopy.write(fsource.read())
+        fsource = open(CONCOREPATH+"/concore_read.m", encoding="utf-8")
+        with open(outdir+"/src/concore_read.m","w", encoding="utf-8") as fcopy: fcopy.write(fsource.read())
         fsource.close()
 
-        fsource = open(CONCOREPATH+"/concore_write.m")
-        with open(outdir+"/src/concore_write.m","w") as fcopy: fcopy.write(fsource.read())
+        fsource = open(CONCOREPATH+"/concore_write.m", encoding="utf-8")
+        with open(outdir+"/src/concore_write.m","w", encoding="utf-8") as fcopy: fcopy.write(fsource.read())
         fsource.close()
 
-        fsource = open(CONCOREPATH+"/concore_initval.m")
-        with open(outdir+"/src/concore_initval.m","w") as fcopy: fcopy.write(fsource.read())
+        fsource = open(CONCOREPATH+"/concore_initval.m", encoding="utf-8")
+        with open(outdir+"/src/concore_initval.m","w", encoding="utf-8") as fcopy: fcopy.write(fsource.read())
         fsource.close()
 
-        fsource = open(CONCOREPATH+"/concore_iport.m")
-        with open(outdir+"/src/concore_iport.m","w") as fcopy: fcopy.write(fsource.read())
+        fsource = open(CONCOREPATH+"/concore_iport.m", encoding="utf-8")
+        with open(outdir+"/src/concore_iport.m","w", encoding="utf-8") as fcopy: fcopy.write(fsource.read())
         fsource.close()
 
-        fsource = open(CONCOREPATH+"/concore_oport.m")
-        with open(outdir+"/src/concore_oport.m","w") as fcopy: fcopy.write(fsource.read())
+        fsource = open(CONCOREPATH+"/concore_oport.m", encoding="utf-8")
+        with open(outdir+"/src/concore_oport.m","w", encoding="utf-8") as fcopy: fcopy.write(fsource.read())
         fsource.close()
 
         if concoretype=="docker":
-            fsource = open(CONCOREPATH+"/import_concoredocker.m")
+            fsource = open(CONCOREPATH+"/import_concoredocker.m", encoding="utf-8")
         else:
-            fsource = open(CONCOREPATH+"/import_concore.m")
-        with open(outdir+"/src/import_concore.m","w") as fcopy: fcopy.write(fsource.read())
+            fsource = open(CONCOREPATH+"/import_concore.m", encoding="utf-8")
+        with open(outdir+"/src/import_concore.m","w", encoding="utf-8") as fcopy: fcopy.write(fsource.read())
         fsource.close()
 
-        fsource = open(CONCOREPATH+"/mkcompile")
-        with open(outdir+"/src/mkcompile","w") as fcopy: fcopy.write(fsource.read())
+        fsource = open(CONCOREPATH+"/mkcompile", encoding="utf-8")
+        with open(outdir+"/src/mkcompile","w", encoding="utf-8") as fcopy: fcopy.write(fsource.read())
         fsource.close()
         os.chmod(outdir+"/src/mkcompile",stat.S_IRWXU)
     except Exception as e:
@@ -802,9 +802,9 @@ for node_label, ports in node_port_mappings.items():
         iport_parent = os.path.dirname(iport_path)
         if iport_parent:
             os.makedirs(iport_parent, exist_ok=True)
-        with open(iport_path, "w") as fport:
+        with open(iport_path, "w", encoding="utf-8") as fport:
             fport.write(str(ports['iport']).replace("'" + prefixedgenode, "'"))
-        with open(oport_path, "w") as fport:
+        with open(oport_path, "w", encoding="utf-8") as fport:
             fport.write(str(ports['oport']).replace("'" + prefixedgenode, "'"))
     except ValueError:
         continue
@@ -840,7 +840,7 @@ if (concoretype=="docker"):
                     else:
                         src_path = CONCOREPATH+"/Dockerfile.m"
                         logging.info("assuming .m extension for Dockerfile")
-                    with open(src_path) as fsource:
+                    with open(src_path, encoding="utf-8") as fsource:
                         source_content = fsource.read()
                 except:
                     logging.error(f"{CONCOREPATH} is not correct path to concore")
@@ -848,7 +848,7 @@ if (concoretype=="docker"):
                 dockerfile_parent = os.path.dirname(dockerfile_path)
                 if dockerfile_parent:
                     os.makedirs(dockerfile_parent, exist_ok=True)
-                with open(dockerfile_path,"w") as fcopy:
+                with open(dockerfile_path,"w", encoding="utf-8") as fcopy:
                     fcopy.write(source_content)
                     if langext=="py":
                         fcopy.write('CMD ["python", "-i", "'+sourcecode+'"]\n')

@@ -165,7 +165,7 @@ def validate_workflow(workflow_file, source_dir, console, output_format="text"):
         return len(errors) == 0
 
     try:
-        with open(workflow_path, "r", encoding="utf-8") as f:
+        with open(workflow_path, "r", encoding="utf-8-sig") as f:
             content = f.read()
 
         if not content.strip():

@@ -24,7 +24,7 @@ def _inspect_rich(workflow_path, source_dir, console):
     console.print()
 
     try:
-        with open(workflow_path, "r") as f:
+        with open(workflow_path, "r", encoding="utf-8-sig") as f:
             content = f.read()
 
         soup = BeautifulSoup(content, "xml")
@@ -185,7 +185,7 @@ def _inspect_json(workflow_path, source_dir):
     import json
 
     try:
-        with open(workflow_path, "r") as f:
+        with open(workflow_path, "r", encoding="utf-8-sig") as f:
             content = f.read()
 
         soup = BeautifulSoup(content, "xml")
